@@ -1,0 +1,32 @@
+<h2>Top 100 movies</h2>
+<table>
+  <tr>
+    <th>#</th>
+    <th>Title</th>
+    <th>Rating</th>
+    <th>Count</th>
+  </tr>
+  <%= form_tag(movies_path_url, method: "get") do %>
+    Age:
+    <%= select_tag "age",
+         options_from_collection_for_select(@ages, :id, :title, @current_age),
+         :include_blank => true
+    %>
+    Gender:
+    <%= select_tag "gender",
+         options_from_collection_for_select(@gender, :first, :last, @current_gender),
+         :include_blank => true
+    %>
+    <%= submit_tag("Search") %>
+    <br><br>
+  <% end %>
+
+  <% @movies_list.each_with_index do |movie, idx| %>
+    <tr>
+      <td><%= idx + 1 %></td>
+      <td><%= movie['title'] %></td>
+      <td><%= movie['ratings_avg'] %></td>
+      <td><%= round_hundreds(movie['ratings_count']) %></td>
+    </tr>
+  <% end %>
+</table>
