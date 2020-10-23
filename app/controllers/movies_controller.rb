@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class MoviesController < ApplicationController
+  include MoviesControllerHelper
+
   def index
     request = search_params
 
@@ -8,35 +10,35 @@ class MoviesController < ApplicationController
     @gender = { 'M': 'Male',
                 'F': 'Female' }
 
-    if !request[:age].present? && !request[:gender].present?
+    if search_all?
       find_all_movies
-    elsif request[:age].present? && request[:gender].present?
-      find_movies_by_age_gender(request[:age], request[:gender])
-    elsif request[:age].present?
-      find_movies_by_age(request[:age])
-    elsif request[:gender].present?
-      find_movies_by_gender(request[:gender])
+    elsif search_age_gender?
+      @current_age = request[:age]
+      @current_gender = request[:gender]
+      find_movies_by_age_gender
+    elsif search_age?
+      @current_age = request[:age]
+      find_movies_by_age
+    elsif search_gender?
+      @current_gender = request[:gender]
+      find_movies_by_gender
     end
   end
 
   def find_all_movies
-    @movies_list = FindAllMoviesQuery.new().execute
+    @movies_list = query('all')
   end
 
-  def find_movies_by_age(age)
-    @movies_list = FindMoviesByAgeQuery.new(age).execute
-    @current_age = request[:age]
+  def find_movies_by_age
+    @movies_list = query("a-#{@current_age}")
   end
 
-  def find_movies_by_gender(gender)
-    @movies_list = FindMoviesByGenderQuery.new(gender).execute
-    @current_gender = request[:gender]
+  def find_movies_by_gender
+    @movies_list = query("g-#{@current_gender}")
   end
 
-  def find_movies_by_age_gender(age, gender)
-    @movies_list = FindMoviesByAgeGenderQuery.new(age, gender).execute
-    @current_age = age
-    @current_gender = gender
+  def find_movies_by_age_gender
+    @movies_list = query("ag-#{@current_age}#{@current_gender}")
   end
 
   def search_params

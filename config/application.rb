@@ -39,5 +39,8 @@ module Movies
 
     #default locale
     config.i18n.default_locale = :en
+
+    # Turn off cache version to use Redis
+    config.active_record.cache_versioning = false
   end
 end
