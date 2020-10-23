@@ -10,16 +10,16 @@ class MoviesController < ApplicationController
     @gender = { 'M': 'Male',
                 'F': 'Female' }
 
-    if !request[:age].present? && !request[:gender].present?
+    if search_all?
       find_all_movies
-    elsif request[:age].present? && request[:gender].present?
+    elsif search_age_gender?
       @current_age = request[:age]
       @current_gender = request[:gender]
       find_movies_by_age_gender
-    elsif request[:age].present?
+    elsif search_age?
       @current_age = request[:age]
       find_movies_by_age
-    elsif request[:gender].present?
+    elsif search_gender?
       @current_gender = request[:gender]
       find_movies_by_gender
     end

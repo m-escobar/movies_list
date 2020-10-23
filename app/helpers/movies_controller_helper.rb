@@ -18,4 +18,20 @@ module MoviesControllerHelper
               end
     JSON.parse(response)
   end
+
+  def search_all?
+    !request[:age].present? && !request[:gender].present?
+  end
+
+  def search_age_gender?
+    request[:age].present? && request[:gender].present?
+  end
+
+  def search_age?
+    request[:age].present?
+  end
+
+  def search_gender?
+    request[:gender].present?
+  end
 end
